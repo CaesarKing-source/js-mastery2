@@ -1,63 +1,47 @@
-// let a = 1
-// function f1() {
-//     console.log(a);
-// }
+const userForm = document.querySelector('#userForm');
+const userList = document.querySelector('#userList');
 
-// function f2() {
-//     let a = 24;
-//     f1();
-// }
-// f2();
-
-
-// Click Limiter
-// function clickLimiter() {
-//     let clicks = 0;
-//     return function() {
-//         if(clicks < 5) {
-//             clicks++;
-//             console.log(`Clicks: ${clicks} times`);
-//         }
-//         else console.error('You have reached the limit.')
-//     }
-// }
-
-// let f1 = clickLimiter();
-// f1(); 
-// f1();
-// f1();
-// f1();
-// f1();
-// f1();
-
-
-// Toaster Function
-
-function createToaster(config) {
-    const { positionX, positionY, duration } = config;
-    const container = document.querySelector('.toasterContainer');
-    return function(message) {
-        // creating toaster
-        const toast = document.createElement('div');
-        toast.classList = `bg-gray-200 text-black font-medium inline p-2 rounded`;
-        toast.textContent = message;
-
-        container.classList += ` fixed ${positionX == 'left' ? 'left-5' : 'right-5'} 
-        ${positionY == 'top' ? 'top-5' : 'bottom-5'}`;
-
-        container.appendChild(toast);
-        setTimeout(() => {
-            container.removeChild(toast);
-        }, duration * 1000);
+const userManager = {
+    users: [],
+    init: function() {
+        console.log(this)
+        userForm.addEventListener('submit', this.submitForm.bind(this))        
+    },
+    submitForm: function(e) {
+        e.preventDefault()
+        const userData = new FormData(userForm);
+        const user = {
+            name: userData.get('name'),
+            age: userData.get('age'),
+            email: userData.get('email'),
+        }
+        this.addUser(user);
+        userForm.reset()
+    },
+    addUser: function(user) {
+        this.users.push(user);
+        this.showUser();
+    },
+    removeUser: function(id) {
+        this.users.splice(id, 1);
+        console.log(`User Removed`, id);
+        this.showUser()
+    },
+    showUser: function() {
+        userList.innerHTML = '';
+        this.users.map((user, index) => {
+            const userCard = document.createElement('div');
+            userCard.id=`${index}`
+            userCard.className = 'bg-gray-800 p-4 rounded-lg shadow border border-gray-700 space-y-2';
+            userCard.innerHTML = `
+                <h3 class="text-lg font-bold">${user.name}</h3>
+                <p class="text-gray-400">Age: ${user.age}</p>
+                <p class="text-gray-500">${user.email}</p>
+                <button onclick="userManager.removeUser(${index})" class="bg-red-500 text-white rounded p-2">Remove</button>
+            `
+            userList.appendChild(userCard);
+        });
     }
 }
 
-const toaster = createToaster({
-    positionX: 'right',
-    positionY: 'bottom',
-    duration: 4
-});
-toaster('Testing Toaster');
-setTimeout(() => { 
-    toaster('Testing Toaster 2');
-}, 2000 )
+userManager.init()
