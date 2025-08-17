@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@layer base {
+  button {
+    @apply bg-amber-200 p-2 text-black rounded my-2
+  }
+
+  input, select {
+    @apply border-2 border-amber-200 p-2 text-amber-200 rounded my-2
+  }
+}
