@@ -1,15 +1,18 @@
 db.cars.aggregate([
     {
-        $project: {
-            _id: 0,
-            maker: 1,
-            model: 1,
-            price: 1
+        $match: {
+            maker: 'Hyundai'
         }
     },
     {
-        $addFields: {
-            Price_Lakhs: { $concat: [{ $toString: { $round: { $divide: ["$price", 100000]} }}, " ", "Lakhs"] }
+        $group: {
+            _id: "$fuel_type",
+            "Total Cars": { $sum : 1}
+        }
+    },
+    {
+        $sort: {
+            "Total Cars": 1
         }
     }
 ])

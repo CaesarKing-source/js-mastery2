@@ -9,7 +9,11 @@ const todoSlice = createSlice({
     initialState,
     reducers: {
         addTodo: (state, action) => {
-            state.todos = [...state.todos, action.payload]
+            let newTodo = {
+                id: state.todos.length + 1,
+                todo: action.payload
+            }
+            state.todos = [...state.todos, newTodo];
         },
         removeTodo: (state, action) => {
             state.todos = state.todos.filter(todo => todo.id !== action.payload)
